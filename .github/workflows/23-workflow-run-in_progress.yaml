@@ -1,0 +1,68 @@
+name: GitHub Actions - Workflow run In Progress Template
+run-name: Running Workflow run In Progress Template
+
+on:
+  workflow_run:
+    workflows: ["Trigger"]
+    types: [in_progress]
+    # branches: [main]  # Opcional: filtro por branch
+
+jobs:
+  monitorar_execucao_Trigger:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Identificar status da execução
+        run: |
+          echo "🔄 WORKFLOW TRIGGER ESTÁ EM PROGRESSO"
+          echo "========================================="
+          echo "Ação do evento: ${{ github.event.action }}"
+          echo "Status atual: ${{ github.event.workflow_run.status }}"
+          echo "Hora do evento: $(date)"
+          echo "Branch: ${{ github.event.workflow_run.head_branch }}"
+          echo "Commit: ${{ github.event.workflow_run.head_sha }}"
+          echo "URL do run: ${{ github.event.workflow_run.html_url }}"
+          echo "Tentativa: ${{ github.event.workflow_run.run_attempt }}"
+          echo "========================================="
+      
+      - name: Simular monitoramento em tempo real
+        run: |
+          echo "📈 MONITORAMENTO EM TEMPO REAL"
+          echo "-------------------------------"
+          echo "Este workflow é executado quando:"
+          echo "1. O Trigger passou da fase 'requested'"
+          echo "2. O Trigger está executando seus jobs ativamente"
+          echo "3. Os steps do Trigger estão sendo processados"
+          echo ""
+          echo "Casos de uso típicos:"
+          echo "• Acompanhamento de execução longa"
+          echo "• Coleta de métricas intermediárias"
+          echo "• Notificações de progresso"
+          echo "• Verificação de saúde durante execução"
+          echo "-------------------------------"
+          
+          # Simular algum processamento de monitoramento
+          for i in {1..3}; do
+            echo "Coletando métrica $i/3..."
+            sleep 2
+          done
+          echo "Monitoramento concluído!"
+      
+      - name: Verificar jobs em execução
+        run: |
+          echo "🔍 ESTADO ATUAL DO TRIGGER"
+          echo "-------------------------"
+          echo "Nome do workflow: ${{ github.event.workflow_run.name }}"
+          echo "ID da execução: ${{ github.event.workflow_run.id }}"
+          echo "Criado em: ${{ github.event.workflow_run.created_at }}"
+          echo "Atualizado em: ${{ github.event.workflow_run.updated_at }}"
+          echo "-------------------------"
+          echo "OBSERVAÇÃO IMPORTANTE:"
+          echo "O tipo 'in_progress' é disparado quando o workflow"
+          echo "Trigger começa a executar SEUS JOBS (após 'requested')"
+          echo ""
+          echo "Diferença entre os tipos:"
+          echo "• requested → workflow foi aceito pela fila"
+          echo "• in_progress → jobs estão rodando ativamente"
+          echo "• completed → todos os jobs terminaram"
+          echo "-------------------------"
