@@ -1,0 +1,148 @@
+name: GitHub Actions - Workflow run Super Combinado
+run-name: Running Workflow run Super Combinado
+
+on:
+  workflow_run:
+    workflows: ["Trigger"]
+    types: [requested, in_progress, completed]
+    # branches: [main]  # Opcional: filtro por branch
+
+jobs:
+  monitoramento_completo:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Passo 1: Identificação clara do tipo de evento
+      - name: Identificador do evento
+        run: |
+          echo "🎯 EVENTO DETECTADO: ${{ github.event.action }}"
+          echo "================================================"
+          
+          case "${{ github.event.action }}" in
+            "requested")
+              echo "🟡 FASE 1: WORKFLOW SOLICITADO"
+              echo "O Trigger foi aceito e está na fila de execução"
+              ;;
+            "in_progress")
+              echo "🟠 FASE 2: WORKFLOW EM EXECUÇÃO"
+              echo "O Trigger está rodando seus jobs ativamente"
+              ;;
+            "completed")
+              echo "🔵 FASE 3: WORKFLOW CONCLUÍDO"
+              echo "O Trigger terminou todos os jobs"
+              ;;
+          esac
+          echo "================================================"
+      
+      # Passo 2: Ações específicas para REQUESTED
+      - name: Ações para REQUESTED (início)
+        if: github.event.action == 'requested'
+        run: |
+          echo "🚀 AÇÕES DE INICIALIZAÇÃO"
+          echo "-------------------------"
+          echo "Hora: $(date)"
+          echo "Workflow ID: ${{ github.event.workflow_run.id }}"
+          echo "Branch: ${{ github.event.workflow_run.head_branch }}"
+          echo "Evento original: ${{ github.event.workflow_run.event }}"
+          echo ""
+          echo "Processos executados:"
+          echo "1. ✅ Notificação de início ao time"
+          echo "2. ✅ Alocação de ambiente de teste"
+          echo "3. ✅ Verificação de pré-requisitos"
+          echo "4. ✅ Início do log de execução"
+          echo "-------------------------"
+      
+      # Passo 3: Ações específicas para IN_PROGRESS
+      - name: Ações para IN_PROGRESS (durante)
+        if: github.event.action == 'in_progress'
+        run: |
+          echo "🔄 AÇÕES DE MONITORAMENTO ATIVO"
+          echo "-------------------------"
+          echo "Hora: $(date)"
+          echo "Status: ${{ github.event.workflow_run.status }}"
+          echo "Tentativa: ${{ github.event.workflow_run.run_attempt }}"
+          echo ""
+          echo "Monitoramento em tempo real:"
+          echo "1. 📊 Coletando métricas de performance"
+          echo "2. 🔍 Verificando saúde dos jobs"
+          echo "3. ⏱️ Medindo tempo de execução parcial"
+          echo "4. 📈 Gerando relatório intermediário"
+          echo ""
+          # Simulação de monitoramento ativo
+          echo "Simulando coleta de dados..."
+          for i in {1..5}; do
+            echo "  Coleta $i/5: Job $i em execução..."
+            sleep 1
+          done
+          echo "-------------------------"
+      
+      # Passo 4: Ações específicas para COMPLETED
+      - name: Ações para COMPLETED (término)
+        if: github.event.action == 'completed'
+        run: |
+          echo "🏁 AÇÕES DE FINALIZAÇÃO"
+          echo "-------------------------"
+          echo "Hora: $(date)"
+          echo "Resultado: ${{ github.event.workflow_run.conclusion }}"
+          echo "Duração: De ${{ github.event.workflow_run.created_at }} até ${{ github.event.workflow_run.updated_at }}"
+          echo "URL completa: ${{ github.event.workflow_run.html_url }}"
+          echo ""
+          
+          # Lógica baseada no resultado final
+          echo "RESULTADO FINAL: ${{ github.event.workflow_run.conclusion | upcase }}"
+          echo ""
+          
+          if [ "${{ github.event.workflow_run.conclusion }}" = "success" ]; then
+            echo "✅ WORKFLOW BEM-SUCEDIDO"
+            echo "Ações pós-sucesso:"
+            echo "1. 🚀 Iniciar pipeline de deploy"
+            echo "2. 📨 Notificar sucesso ao time"
+            echo "3. 📊 Registrar métricas finais"
+            echo "4. 🗄️  Arquivar artifacts"
+          elif [ "${{ github.event.workflow_run.conclusion }}" = "failure" ]; then
+            echo "❌ WORKFLOW COM FALHA"
+            echo "Ações pós-falha:"
+            echo "1. 🚨 Acionar procedimento de emergência"
+            echo "2. 👨‍💻 Notificar desenvolvedores responsáveis"
+            echo "3. 📋 Registrar causa raiz do erro"
+            echo "4. 🔄 Preparar rollback automático"
+          elif [ "${{ github.event.workflow_run.conclusion }}" = "cancelled" ]; then
+            echo "🛑 WORKFLOW CANCELADO"
+            echo "Ações pós-cancelamento:"
+            echo "1. ℹ️ Registrar motivo do cancelamento"
+            echo "2. 🧹 Limpar recursos alocados"
+            echo "3. 📝 Atualizar documentação"
+          else
+            echo "⚠️ RESULTADO INESPERADO: ${{ github.event.workflow_run.conclusion }}"
+            echo "Ações genéricas:"
+            echo "1. 🔎 Investigar status"
+            echo "2. 📋 Registrar para análise"
+          fi
+          echo "-------------------------"
+      
+      # Passo 5: Dashboard/resumo final
+      - name: Dashboard de execução
+        run: |
+          echo "📊 DASHBOARD - CICLO COMPLETO DO TRIGGER"
+          echo "========================================"
+          echo "Workflow Monitor: 24-workflow-run-super-combinado"
+          echo "Workflow Alvo: Trigger"
+          echo "Evento Atual: ${{ github.event.action }}"
+          echo "Status: ${{ github.event.workflow_run.status }}"
+          echo ""
+          echo "📈 FLUXO COMPLETO MONITORADO:"
+          echo "  1. requested → Início/fila"
+          echo "  2. in_progress → Execução ativa"
+          echo "  3. completed → Término"
+          echo ""
+          echo "⚡ VANTAGENS DESTA ABORDAGEM:"
+          echo "  • Um único arquivo para todo o ciclo"
+          echo "  • Lógica centralizada"
+          echo "  • Fácil manutenção"
+          echo "  • Visão completa do pipeline"
+          echo ""
+          echo "🔄 ESTE WORKFLOW SERÁ EXECUTADO 3 VEZES:"
+          echo "  1ª vez: Quando Trigger é solicitado"
+          echo "  2ª vez: Quando Trigger começa a executar"
+          echo "  3ª vez: Quando Trigger termina"
+          echo "========================================"
