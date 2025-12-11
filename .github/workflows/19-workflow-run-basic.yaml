@@ -1,0 +1,16 @@
+name: GitHub Actions Workflow run Basic Template
+run-name: Running - Workflow run Basic Template
+
+on:
+  workflow_run:
+    workflows: ["Trigger"]  # Nome do workflow que vai disparar este
+    types:
+      - completed  # Executa quando o workflow "Trigger" terminar
+    branches: [main]  # Opcional: só se o "Trigger" rodou na branch main
+
+jobs:
+  quando_Trigger_for_disparado:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Comentário
+        run: echo "Workflow run Basic foi trigado pelo workflow Trigger!"
